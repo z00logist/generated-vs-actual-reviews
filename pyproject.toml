@@ -9,6 +9,8 @@ python = ">=3.9,<4.0"
 pandas = "^1.2.3"
 matplotlib = "^3.8.2"
 seaborn = "^0.13.2"
+pymorphy2 = "^0.9.1"
+natasha = "^1.6.0"
 
 [tool.poetry.group.dev.dependencies]
 ipykernel = "^6.29.0"
