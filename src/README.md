@@ -8,6 +8,13 @@ We have rewritten some parts of it, adjusting the code to run on CSV files.
 
 To utilize this tool on your data, follow the steps below:
 
+### Step 0: Install Dependencied
+
+Before all, you need to install dependencies through poetry in your local venv:
+
+```bash
+poetry install --no-root"
+```
 ### Step 1: Generate Linguistic Features
 
 First, you need to generate linguistic features using `extract_characteristics.py`. Execute the following command in your terminal:
