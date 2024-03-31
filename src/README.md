@@ -20,7 +20,8 @@ poetry install --no-root"
 First, you need to generate linguistic features using `extract_characteristics.py`. Execute the following command in your terminal:
 
 ```bash
-python process_data.py --data_path="enter/your/data.csv" --column_name="enter_column_name" --output_path="enter/your/output.csv"
+cd src/complexity_model_adapted/
+python extract_characteristics.py --data_path="enter/your/data.csv" --column_name="enter_column_name" --output_path="enter/your/output.csv"
 ```
 
 ### Step 2: Count Metrics
@@ -30,7 +31,7 @@ After preprocessing your data, the next step involves counting the metrics with 
 1. **Navigate to the Metrics Directory**: First, change your current working directory to where the `feature_extractor.py` script is located. This is within the `complexity_metrics_adapted/Metrics` folder. You can do this from the command line with the following command:
 
 ```bash
-cd complexity_metrics_adapted/Metrics
+cd src/complexity_model_adapted/Metrics
 ```
 2. **Run the Extractor Script**: This script will process the data according to the specified parameters and output the results to the defined CSV file.
 ```bash
