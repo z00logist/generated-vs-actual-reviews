@@ -22,7 +22,6 @@ import glob
 import math 
 import os
 import re
-import string
 from multiprocessing import Pool, cpu_count
 from collections import Counter
 
@@ -104,12 +103,13 @@ def comma_pr(words):
     return len([item for sublist in words for item in sublist if item['word']==','])/sum([len(item) for sublist in words for item in sublist])
 
 
-def ASL(words):
-    punctuation = set(string.punctuation)
-    total_words = sum(len([word_info for word_info in sentence if word_info['word'].strip() not in punctuation]) for sentence in words)
-    total_sentences = len(words)
-    average_sentence_length = total_words / total_sentences if total_sentences > 0 else 0
-    return average_sentence_length
+def ASL(wordlist):
+    total_words = sum(len(sentence) for sentence in wordlist)  # Total word count
+    total_sentences = len(wordlist)  
+
+    asl = total_words / total_sentences if total_sentences > 0 else 0
+
+    return asl
 
 
 def ASS(words):
@@ -1076,33 +1076,44 @@ class FeatureExtractor:
         self.function_list = [i.split('(')[0] for i in functions_args]
         self.arglist = [i.split('(')[1][:-1] for i in functions_args]
 
-    def parse_csv(self, file_path):
+    def parse_csv(self,file_path):
         with open(file_path, newline='', encoding='utf-8') as csvfile:
             reader = csv.DictReader(csvfile)
-            
+
             wordlist = []
             sentlist = []
-            current_sentence_id = None
+
             current_sentence_words = []
 
             for row in reader:
-                if row['sentence_id'] != current_sentence_id:
+                sentence = row['sentence']
+                if sentence not in sentlist:
+
                     if current_sentence_words:
                         wordlist.append(current_sentence_words)
-                        current_sentence_words = []
+                    current_sentence_words = []
+                    sentlist.append(sentence)
+
+                i = 1
+                while True:
+                    word_key = f'word{i}'
+
+                    if word_key not in row:
+                        break
                     
-                    sentlist.append(row['sentence'])
-                    current_sentence_id = row['sentence_id']
-                
-                word_info = {
-                    'word': row['word'],
-                    'lemma': row['lemma'],
-                    'pos': row['pos'],
-                    'morph': row['morph'],
-                    'dep': row['dep']
-                }
-                current_sentence_words.append(word_info)
-            
+                    word = row[word_key].strip()
+                    if word:
+                        word_info = {
+                            'word': word,
+                            'lemma': row.get(f'lemma{i}', '').strip(),
+                            'pos': row.get(f'pos{i}', '').strip(),
+                            'morph': row.get(f'morph{i}', '').strip(),
+                            'dep': row.get(f'dep{i}', '').strip()
+                        }
+                        if word_info['word'].isalpha() or "-" in word_info['word']:  # Simple validation
+                            current_sentence_words.append(word_info)
+                    i += 1
+
             if current_sentence_words:
                 wordlist.append(current_sentence_words)
 
